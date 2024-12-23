@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Lọc Tên</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 5px 5px 5px 0;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .actions, .options {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .option-group {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tool Lọc Tên</h2>
+        <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
+
+        <div class="options">
+            <div class="option-group">
+                <label><input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
+            </div>
+            <div class="option-group">
+                <label><input type="checkbox" id="removeDuplicates" checked> Lọc trùng</label>
+            </div>
+            <div class="option-group">
+                <label><input type="checkbox" id="removeDuplicatesReversed" checked> Lọc trùng nghịch đảo</label>
+            </div>
+        </div>
+
+        <button onclick="processData()">Thực hiện</button>
+        <div class="actions">
+            <button onclick="copyResult()">Sao chép kết quả</button>
+            <button onclick="downloadResult()">Tải xuống TXT</button>
+        </div>
+        <h3>Kết quả:</h3>
+        <textarea id="outputArea" readonly></textarea>
+    </div>
+    <script>
+         function nonAccentVietnamese(str) {
+          return str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a")
+            .replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e")
+            .replace(/ì|í|ị|ỉ|ĩ/g, "i")
+            .replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o")
+            .replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u")
+            .replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y")
+            .replace(/đ/g, "d")
+            .replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, "")
+            .replace(/\u02C6|\u0306|\u031B/g, "");        
+        }
+
+        function removeDuplicates(list) {
+            return [...new Set(list)];
+        }
+
+        function removeDuplicatesReversed(list) {
+            const reversedMap = new Map();
+            list.forEach(item => {
+                const key = item.split(' ').reverse().join(' ');
+                if (!reversedMap.has(key)) reversedMap.set(key, item);
+            });
+            return [...reversedMap.values()];
+        }
+
+        function processData() {
+            const input = document.getElementById('inputArea').value;
+
+            if (!input.trim()) {
+                alert("Vui lòng nhập dữ liệu!");
+                return;
+            }
+
+            let names = input.split('\n').map(name => name.trim()).filter(name => name);
+
+            if (document.getElementById('removeAccent').checked) {
+                names = names.map(name => nonAccentVietnamese(name));
+            }
+            if (document.getElementById('removeDuplicates').checked) {
+                names = removeDuplicates(names);
+            }
+            if (document.getElementById('removeDuplicatesReversed').checked) {
+                names = removeDuplicatesReversed(names);
+            }
+
+            document.getElementById('outputArea').value = names.join('\n');
+        }
+
+        function copyResult() {
+            const outputArea = document.getElementById('outputArea');
+            if (!outputArea.value.trim()) {
+                alert("Không có dữ liệu để sao chép!");
+                return;
+            }
+            outputArea.select();
+            document.execCommand('copy');
+            alert("Đã sao chép kết quả vào clipboard!");
+        }
+
+        function downloadResult() {
+            const output = document.getElementById('outputArea').value;
+            if (!output.trim()) {
+                alert("Không có dữ liệu để tải xuống!");
+                return;
+            }
+            const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "ket_qua_loc_ten.txt";
+            link.click();
+        }
+    </script>
+</body>
+</html>

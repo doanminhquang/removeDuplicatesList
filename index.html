@@ -80,11 +80,12 @@
 <body>
     <div class="container">
         <h2>Tool Lọc Tên</h2>
-        <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
-
+        
         <div class="count-info">
             <label>Số lượng tên ban đầu: <span id="inputCount">0</span></label>
         </div>
+        
+        <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
 
         <div class="options">             
             <div class="option-group">
@@ -93,6 +94,7 @@
             <div class="option-group">
                 <label><input type="radio" name="caseOption" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
                 <label><input type="radio" name="caseOption" id="lowercaseNames"> Chỉ viết thường</label>
+                <label><input type="radio" name="caseOption" id="nonFormatNames"> Không can thiệp hoa thường</label>
             </div>    
             <div class="option-group">
                 <label><input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
@@ -114,11 +116,12 @@
             <button onclick="downloadResult()">Tải xuống TXT</button>
         </div>
         <h3>Kết quả:</h3>
-        <textarea id="outputArea" readonly></textarea>
-
+        
         <div class="count-info">
             <label>Số lượng tên kết quả: <span id="outputCount">0</span></label>
         </div>
+        
+        <textarea id="outputArea" readonly></textarea>
     </div>
     <script>
         document.getElementById('inputArea').addEventListener('input', function() {

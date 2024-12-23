@@ -65,10 +65,7 @@
         <h2>Tool Lọc Tên</h2>
         <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
 
-        <div class="options">            
-            <div class="option-group">
-                <label><input type="checkbox" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
-            </div>
+        <div class="options">
             <div class="option-group">
                 <label><input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
             </div>
@@ -88,17 +85,18 @@
         <h3>Kết quả:</h3>
         <textarea id="outputArea" readonly></textarea>
     </div>
+
     <script>
         function nonAccentVietnamese(str) {
-            return str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a")
-                .replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e")
-                .replace(/ì|í|ị|ỉ|ĩ/g, "i")
-                .replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o")
-                .replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u")
-                .replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y")
-                .replace(/đ/g, "d")
-                .replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, "")
-                .replace(/\u02C6|\u0306|\u031B/g, "");
+            const accents = {
+                à: 'a', á: 'a', ạ: 'a', ả: 'a', ã: 'a', â: 'a', ầ: 'a', ấ: 'a', ậ: 'a', ẩ: 'a', ẫ: 'a',
+                ă: 'a', ằ: 'a', ắ: 'a', ặ: 'a', ẳ: 'a', ẵ: 'a', è: 'e', é: 'e', ẹ: 'e', ẻ: 'e', ẽ: 'e', ê: 'e',
+                ề: 'e', ế: 'e', ệ: 'e',ể: 'e',ễ: 'e', ì: 'i', í: 'i', ị: 'i', ỉ: 'i', ĩ: 'i', ò: 'o', ó: 'o',
+                ọ: 'o', ỏ: 'o', õ: 'o', ô: 'o',ồ: 'o',ố: 'o',ộ: 'o',ổ: 'o',ỗ: 'o',ơ: 'o',ờ: 'o',ớ: 'o',ợ: 'o',
+                ở: 'o',ỡ: 'o', ù: 'u', ú: 'u', ụ: 'u', ủ: 'u',ũ: 'u', ư: 'u',ừ: 'u',ứ: 'u',ự: 'u',ử: 'u',ữ: 'u',
+               ỳ: 'y', ý: 'y', ỵ: 'y', ỷ: 'y', ỹ: 'y', đ: 'd', ̣: ''  
+            };
+            return str.split('').map(char => accents[char] || char).join('');
         }
 
         function removeDuplicates(list) {
@@ -108,34 +106,21 @@
         function removeDuplicatesReversed(list) {
             const reversedMap = new Map();
             list.forEach(item => {
-                const key = item.split(' ').reverse().join(' ');
-                if (!reversedMap.has(key)) reversedMap.set(key, item);
+                const reversed = item.split(' ').reverse().join(' ');
+                if (!reversedMap.has(reversed)) reversedMap.set(reversed, item);
             });
             return [...reversedMap.values()];
         }
 
-        function capitalizeNames(names) {
-            return names.map(name => {
-                return name
-                    .split(' ')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                    .join(' ');
-            });
-        }
-
         function processData() {
-            const input = document.getElementById('inputArea').value;
-
-            if (!input.trim()) {
+            const input = document.getElementById('inputArea').value.trim();
+            if (!input) {
                 alert("Vui lòng nhập dữ liệu!");
                 return;
             }
 
             let names = input.split('\n').map(name => name.trim()).filter(name => name);
-            
-            if (document.getElementById('capitalizeNames').checked) {
-                names = capitalizeNames(names);
-            }
+
             if (document.getElementById('removeAccent').checked) {
                 names = names.map(name => nonAccentVietnamese(name));
             }
@@ -155,17 +140,21 @@
                 alert("Không có dữ liệu để sao chép!");
                 return;
             }
-            outputArea.select();
-            document.execCommand('copy');
-            alert("Đã sao chép kết quả vào clipboard!");
+
+            navigator.clipboard.writeText(outputArea.value).then(() => {
+                alert("Đã sao chép kết quả vào clipboard!");
+            }).catch(() => {
+                alert("Lỗi sao chép dữ liệu!");
+            });
         }
 
         function downloadResult() {
-            const output = document.getElementById('outputArea').value;
-            if (!output.trim()) {
+            const output = document.getElementById('outputArea').value.trim();
+            if (!output) {
                 alert("Không có dữ liệu để tải xuống!");
                 return;
             }
+
             const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);

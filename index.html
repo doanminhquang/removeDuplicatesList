@@ -126,12 +126,17 @@
         }
         
         function removeDuplicatesReversed(list) {
-            const reversedMap = new Map();
-            list.forEach(item => {
-                const key = item.trim().split(' ').reverse().join(' ').trim();
-                if (!reversedMap.has(key)) reversedMap.set(key, item.trim());
-            });
-            return [...reversedMap.values()];
+            const seen = new Set();
+            const result = [];
+            
+           arr.forEach(item => {
+               const reversedItem = item.split(' ').reverse().join(' ');
+               if (!seen.has(item) && !seen.has(reversedItem)) {
+                   result.push(item);
+                   seen.add(item);
+               }
+           });            
+           return result;
         }
         
         function capitalizeNames(names) {

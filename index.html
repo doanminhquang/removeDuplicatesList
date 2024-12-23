@@ -70,12 +70,21 @@
         .actions {
             margin-top: 10px;
         }
+
+        .count-info {
+            margin: 10px 0;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Tool Lọc Tên</h2>
         <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
+
+        <div class="count-info">
+            <label>Số lượng tên ban đầu: <span id="inputCount">0</span></label>
+        </div>
 
         <div class="options">             
             <div class="option-group">
@@ -106,8 +115,18 @@
         </div>
         <h3>Kết quả:</h3>
         <textarea id="outputArea" readonly></textarea>
+
+        <div class="count-info">
+            <label>Số lượng tên kết quả: <span id="outputCount">0</span></label>
+        </div>
     </div>
     <script>
+        document.getElementById('inputArea').addEventListener('input', function() {
+            const inputText = this.value.trim();
+            const inputCount = inputText ? inputText.split('\n').filter(line => line.trim()).length : 0;
+            document.getElementById('inputCount').textContent = inputCount;
+        });
+
         function nonAccentVietnamese(str) {
             return str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a")
                       .replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A")
@@ -135,14 +154,14 @@
             const seen = new Set();
             const result = [];
             
-           arr.forEach(item => {
-               const reversedItem = item.split(' ').reverse().join(' ');
-               if (!seen.has(item) && !seen.has(reversedItem)) {
-                   result.push(item);
-                   seen.add(item);
-               }
-           });            
-           return result;
+            arr.forEach(item => {
+                const reversedItem = item.split(' ').reverse().join(' ');
+                if (!seen.has(item) && !seen.has(reversedItem)) {
+                    result.push(item);
+                    seen.add(item);
+                }
+            });            
+            return result;
         }
         
         function capitalizeNames(names) {
@@ -201,29 +220,22 @@
             }
         
             document.getElementById('outputArea').value = names.join('\n');
+            document.getElementById('outputCount').textContent = names.length;
         }
         
         function copyResult() {
             const outputArea = document.getElementById('outputArea');
-            if (!outputArea.value.trim()) {
-                alert("Không có dữ liệu để sao chép!");
-                return;
-            }
             outputArea.select();
             document.execCommand('copy');
-            alert("Đã sao chép kết quả vào clipboard!");
         }
-    
+        
         function downloadResult() {
-            const output = document.getElementById('outputArea').value.trim();
-            if (!output) {
-                alert("Không có dữ liệu để tải xuống!");
-                return;
-            }
-            const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
+            const outputArea = document.getElementById('outputArea');
+            const text = outputArea.value;
+            const blob = new Blob([text], { type: 'text/plain' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = "ket_qua_loc_ten.txt";
+            link.download = 'result.txt';
             link.click();
         }
     </script>

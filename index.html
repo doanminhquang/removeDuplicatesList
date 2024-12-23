@@ -77,11 +77,14 @@
         <h2>Tool Lọc Tên</h2>
         <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
 
-        <div class="options">            
+        <div class="options">             
+            <div class="option-group">
+                <label><input type="checkbox" id="removeNumbering"> Bỏ số thứ tự</label>
+            </div>       
             <div class="option-group">
                 <label><input type="radio" name="caseOption" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
                 <label><input type="radio" name="caseOption" id="lowercaseNames"> Chỉ viết thường</label>
-            </div>
+            </div>    
             <div class="option-group">
                 <label><input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
             </div>
@@ -93,9 +96,6 @@
             </div>
             <div class="option-group">
                 <label><input type="checkbox" id="shuffleNames"> Xáo trộn danh sách</label>
-            </div>
-            <div class="option-group">
-                <label><input type="checkbox" id="removeNumbering"> Bỏ số thứ tự</label>
             </div>
         </div>
 
@@ -178,6 +178,9 @@
         
             let names = input.split('\n').map(name => name.trim()).filter(name => name);
             
+            if (document.getElementById('removeNumbering').checked) {
+                names = removeNumbering(names);
+            }
             if (document.getElementById('capitalizeNames').checked) {
                 names = capitalizeNames(names);
             }
@@ -192,9 +195,6 @@
             }
             if (document.getElementById('removeDuplicatesReversed').checked) {
                 names = removeDuplicatesReversed(names);
-            }
-            if (document.getElementById('removeNumbering').checked) {
-                names = removeNumbering(names);
             }
             if (document.getElementById('shuffleNames').checked) {
                 names = shuffleArray(names); 

@@ -122,14 +122,14 @@
         }
         
         function removeDuplicates(list) {
-            return [...new Set(list)];
+            return [...new Set(list.map(item => item.trim()))];
         }
         
         function removeDuplicatesReversed(list) {
             const reversedMap = new Map();
             list.forEach(item => {
-                const key = item.split(' ').reverse().join(' ');
-                if (!reversedMap.has(key)) reversedMap.set(key, item);
+                const key = item.trim().split(' ').reverse().join(' ');
+                if (!reversedMap.has(key)) reversedMap.set(key, item.trim());
             });
             return [...reversedMap.values()];
         }
@@ -144,9 +144,9 @@
         }
         
         function processData() {
-            const input = document.getElementById('inputArea').value;
+            const input = document.getElementById('inputArea').value.trim();
         
-            if (!input.trim()) {
+            if (!input) {
                 alert("Vui lòng nhập dữ liệu!");
                 return;
             }
@@ -182,10 +182,10 @@
             document.execCommand('copy');
             alert("Đã sao chép kết quả vào clipboard!");
         }
-        
+    
         function downloadResult() {
-            const output = document.getElementById('outputArea').value;
-            if (!output.trim()) {
+            const output = document.getElementById('outputArea').value.trim();
+            if (!output) {
                 alert("Không có dữ liệu để tải xuống!");
                 return;
             }

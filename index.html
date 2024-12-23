@@ -128,7 +128,7 @@
         function removeDuplicatesReversed(list) {
             const reversedMap = new Map();
             list.forEach(item => {
-                const key = item.trim().split(' ').reverse().join(' ');
+                const key = item.trim().split(' ').reverse().join(' ').trim();
                 if (!reversedMap.has(key)) reversedMap.set(key, item.trim());
             });
             return [...reversedMap.values()];
@@ -139,7 +139,7 @@
                 return name
                     .split(' ')
                     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                    .join(' ');
+                    .join(' ').trim();
             });
         }
         

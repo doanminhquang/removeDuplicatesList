@@ -65,7 +65,10 @@
         <h2>Tool Lọc Tên</h2>
         <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
 
-        <div class="options">
+        <div class="options">            
+            <div class="option-group">
+                <label><input type="checkbox" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
+            </div>
             <div class="option-group">
                 <label><input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
             </div>
@@ -86,16 +89,16 @@
         <textarea id="outputArea" readonly></textarea>
     </div>
     <script>
-         function nonAccentVietnamese(str) {
-          return str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a")
-            .replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e")
-            .replace(/ì|í|ị|ỉ|ĩ/g, "i")
-            .replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o")
-            .replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u")
-            .replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y")
-            .replace(/đ/g, "d")
-            .replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, "")
-            .replace(/\u02C6|\u0306|\u031B/g, "");        
+        function nonAccentVietnamese(str) {
+            return str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a")
+                .replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e")
+                .replace(/ì|í|ị|ỉ|ĩ/g, "i")
+                .replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o")
+                .replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u")
+                .replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y")
+                .replace(/đ/g, "d")
+                .replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, "")
+                .replace(/\u02C6|\u0306|\u031B/g, "");
         }
 
         function removeDuplicates(list) {
@@ -111,6 +114,15 @@
             return [...reversedMap.values()];
         }
 
+        function capitalizeNames(names) {
+            return names.map(name => {
+                return name
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                    .join(' ');
+            });
+        }
+
         function processData() {
             const input = document.getElementById('inputArea').value;
 
@@ -120,7 +132,10 @@
             }
 
             let names = input.split('\n').map(name => name.trim()).filter(name => name);
-
+            
+            if (document.getElementById('capitalizeNames').checked) {
+                names = capitalizeNames(names);
+            }
             if (document.getElementById('removeAccent').checked) {
                 names = names.map(name => nonAccentVietnamese(name));
             }

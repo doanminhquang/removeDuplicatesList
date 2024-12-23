@@ -92,7 +92,7 @@
                 <label><input type="checkbox" id="removeDuplicatesReversed" checked> Lọc trùng nghịch đảo</label>
             </div>
             <div class="option-group">
-                <label><input type="checkbox" id="shuffleNames"> Xáo trộn danh sách</label>
+                <label><input type="checkbox" id="removeNumbering"> Bỏ số thứ tự</label>
             </div>
         </div>
 
@@ -151,12 +151,10 @@
             });
         }
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-            }
-            return array;
+        function removeNumbering(names) {
+            return names.map(name => {
+                return name.replace(/^\d+\s*\./, '').trim();
+            });
         }
 
         function processData() {
@@ -184,8 +182,8 @@
             if (document.getElementById('removeDuplicatesReversed').checked) {
                 names = removeDuplicatesReversed(names);
             }
-            if (document.getElementById('shuffleNames').checked) {
-                names = shuffleArray(names); 
+            if (document.getElementById('removeNumbering').checked) {
+                names = removeNumbering(names);
             }
         
             document.getElementById('outputArea').value = names.join('\n');

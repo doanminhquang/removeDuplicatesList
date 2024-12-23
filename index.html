@@ -91,6 +91,9 @@
             <div class="option-group">
                 <label><input type="checkbox" id="removeDuplicatesReversed" checked> Lọc trùng nghịch đảo</label>
             </div>
+            <div class="option-group">
+                <label><input type="checkbox" id="shuffleNames"> Xáo trộn danh sách</label>
+            </div>
         </div>
 
         <button onclick="processData()">Thực hiện</button>
@@ -147,7 +150,15 @@
                     .join(' ').trim();
             });
         }
-        
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }
+
         function processData() {
             const input = document.getElementById('inputArea').value.trim();
         
@@ -172,6 +183,9 @@
             }
             if (document.getElementById('removeDuplicatesReversed').checked) {
                 names = removeDuplicatesReversed(names);
+            }
+            if (document.getElementById('shuffleNames').checked) {
+                names = shuffleArray(names); 
             }
         
             document.getElementById('outputArea').value = names.join('\n');

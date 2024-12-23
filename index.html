@@ -7,14 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
             padding: 0;
             background-color: #f4f4f4;
         }
         
         .container {
             max-width: 600px;
-            margin: auto;
+            margin: 20px auto;
             padding: 20px;
             background: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -22,7 +22,7 @@
         }
         
         textarea {
-            width: 97%;
+            width: 100%;
             height: 150px;
             padding: 10px;
             margin: 10px 0;
@@ -31,7 +31,7 @@
             font-size: 16px;
             resize: none;
         }
-                
+        
         textarea:focus {
             outline: none;
         }
@@ -39,7 +39,7 @@
         button {
             padding: 10px 15px;
             font-size: 16px;
-            margin: 5px 5px 5px 0;
+            margin: 5px;
             background: #007BFF;
             color: white;
             border: none;
@@ -51,12 +51,24 @@
             background: #0056b3;
         }
         
-        .options, .actions {
+        .options {
             margin: 10px 0;
         }
         
         .option-group {
             margin-bottom: 10px;
+        }
+        
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        
+        h3 {
+            margin-top: 20px;
+        }
+        
+        .actions {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -67,7 +79,8 @@
 
         <div class="options">            
             <div class="option-group">
-                <label><input type="checkbox" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
+                <label><input type="radio" name="caseOption" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
+                <label><input type="radio" name="caseOption" id="lowercaseNames"> Chỉ viết thường</label>
             </div>
             <div class="option-group">
                 <label><input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
@@ -107,11 +120,11 @@
                       .replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, "")
                       .replace(/\u02C6|\u0306|\u031B/g, "");
         }
-
+        
         function removeDuplicates(list) {
             return [...new Set(list)];
         }
-
+        
         function removeDuplicatesReversed(list) {
             const reversedMap = new Map();
             list.forEach(item => {
@@ -120,7 +133,7 @@
             });
             return [...reversedMap.values()];
         }
-
+        
         function capitalizeNames(names) {
             return names.map(name => {
                 return name
@@ -129,19 +142,22 @@
                     .join(' ');
             });
         }
-
+        
         function processData() {
             const input = document.getElementById('inputArea').value;
-
+        
             if (!input.trim()) {
                 alert("Vui lòng nhập dữ liệu!");
                 return;
             }
-
+        
             let names = input.split('\n').map(name => name.trim()).filter(name => name);
             
             if (document.getElementById('capitalizeNames').checked) {
                 names = capitalizeNames(names);
+            }
+            if (document.getElementById('lowercaseNames').checked) {
+                names = names.map(name => name.toLowerCase());
             }
             if (document.getElementById('removeAccent').checked) {
                 names = names.map(name => nonAccentVietnamese(name));
@@ -152,10 +168,10 @@
             if (document.getElementById('removeDuplicatesReversed').checked) {
                 names = removeDuplicatesReversed(names);
             }
-
+        
             document.getElementById('outputArea').value = names.join('\n');
         }
-
+        
         function copyResult() {
             const outputArea = document.getElementById('outputArea');
             if (!outputArea.value.trim()) {
@@ -166,7 +182,7 @@
             document.execCommand('copy');
             alert("Đã sao chép kết quả vào clipboard!");
         }
-
+        
         function downloadResult() {
             const output = document.getElementById('outputArea').value;
             if (!output.trim()) {

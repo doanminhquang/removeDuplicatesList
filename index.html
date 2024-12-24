@@ -80,36 +80,45 @@
 <body>
     <div class="container">
         <h2>Tool Lọc Tên</h2>
-        
+
         <div class="count-info">
             <label>Số lượng tên ban đầu: <span id="inputCount">0</span></label>
         </div>
-        
+
         <textarea id="inputArea" placeholder="Nhập danh sách tên (mỗi tên trên một dòng)"></textarea>
 
-        <div class="options">             
+        <div class="options">
             <div class="option-group">
-                <label><input type="checkbox" id="removeNumbering"> Bỏ số thứ tự</label>
-            </div>       
-            <div class="option-group">
-                <label><input type="radio" name="caseOption" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
-                <label><input type="radio" name="caseOption" id="lowercaseNames"> Chỉ viết thường</label>
-                <label><input type="radio" name="caseOption" id="nonFormatNames"> Không can thiệp hoa thường</label>
-            </div>    
-            <div class="option-group">
-                <label><input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
+                <label>
+                    <input type="checkbox" id="removeNumbering"> Bỏ số thứ tự</label>
             </div>
             <div class="option-group">
-                <label><input type="checkbox" id="removeDuplicates" checked> Lọc trùng</label>
+                <label>
+                    <input type="radio" name="caseOption" id="capitalizeNames" checked> Viết hoa chữ cái đầu</label>
+                <label>
+                    <input type="radio" name="caseOption" id="lowercaseNames"> Chỉ viết thường</label>
+                <label>
+                    <input type="radio" name="caseOption" id="nonFormatNames"> Không can thiệp hoa thường</label>
             </div>
             <div class="option-group">
-                <label><input type="checkbox" id="removeDuplicatesReversed" checked> Lọc trùng nghịch đảo</label>
+                <label>
+                    <input type="checkbox" id="removeAccent" checked> Bỏ dấu</label>
             </div>
             <div class="option-group">
-                <label><input type="checkbox" id="shuffleNames"> Xáo trộn danh sách</label>
+                <label>
+                    <input type="checkbox" id="removeDuplicates" checked> Lọc trùng</label>
             </div>
             <div class="option-group">
-                <label><input type="checkbox" id="addNumberingOutput">Thêm số thứ tự vào kết quả</label>
+                <label>
+                    <input type="checkbox" id="removeDuplicatesReversed" checked> Lọc trùng nghịch đảo</label>
+            </div>
+            <div class="option-group">
+                <label>
+                    <input type="checkbox" id="shuffleNames"> Xáo trộn danh sách</label>
+            </div>
+            <div class="option-group">
+                <label>
+                    <input type="checkbox" id="addNumberingOutput">Thêm số thứ tự vào kết quả</label>
             </div>
         </div>
 
@@ -120,11 +129,11 @@
             <button onclick="clearAllData()">Xóa toàn bộ dữ liệu tạm thời</button>
         </div>
         <h3>Kết quả:</h3>
-        
+
         <div class="count-info">
             <label>Số lượng tên kết quả: <span id="outputCount">0</span></label>
         </div>
-        
+
         <textarea id="outputArea" readonly></textarea>
     </div>
     <script>
@@ -290,19 +299,12 @@
         }
 
         function clearAllData() {
-
-    document.getElementById('inputArea').value = '';
-    document.getElementById('outputArea').value = '';
-    document.getElementById('inputCount').textContent = '0';
-    document.getElementById('outputCount').textContent = '0';
-
-    
-    localStorage.clear();
-    
-
-    
-}
-
+            document.getElementById('inputArea').value = '';
+            document.getElementById('outputArea').value = '';
+            document.getElementById('inputCount').textContent = '0';
+            document.getElementById('outputCount').textContent = '0';
+            localStorage.clear();
+        }
     </script>
 </body>
 </html>

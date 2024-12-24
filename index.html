@@ -166,6 +166,9 @@
                 document.getElementById('addNumberingOutput').checked = true;
             }
             document.getElementById('inputArea').value = localStorage.getItem("inputText") || "";
+            const inputText = document.getElementById('inputArea').value.trim();
+            const inputCount = inputText ? inputText.split('\n').filter(line => line.trim()).length : 0;
+            document.getElementById('inputCount').textContent = inputCount;
         };
 
         document.querySelectorAll('input[type="radio"], input[type="checkbox"], textarea').forEach(input => {

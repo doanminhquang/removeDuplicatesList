@@ -108,6 +108,9 @@
             <div class="option-group">
                 <label><input type="checkbox" id="shuffleNames"> Xáo trộn danh sách</label>
             </div>
+            <div class="option-group">
+                <label><input type="checkbox" id="addNumberingOutput">Thêm số thứ tự vào kết quả</label>
+            </div>
         </div>
 
         <button onclick="processData()">Thực hiện</button>
@@ -124,6 +127,46 @@
         <textarea id="outputArea" readonly></textarea>
     </div>
     <script>
+        window.onload = function() {
+            if (localStorage.getItem("removeNumbering") === "true") {
+                document.getElementById('removeNumbering').checked = true;
+            }
+            if (localStorage.getItem("capitalizeNames") === "true") {
+                document.getElementById('capitalizeNames').checked = true;
+            }
+            if (localStorage.getItem("lowercaseNames") === "true") {
+                document.getElementById('lowercaseNames').checked = true;
+            }
+            if (localStorage.getItem("nonFormatNames") === "true") {
+                document.getElementById('nonFormatNames').checked = true;
+            }
+            if (localStorage.getItem("removeAccent") === "true") {
+                document.getElementById('removeAccent').checked = true;
+            }
+            if (localStorage.getItem("removeDuplicates") === "true") {
+                document.getElementById('removeDuplicates').checked = true;
+            }
+            if (localStorage.getItem("removeDuplicatesReversed") === "true") {
+                document.getElementById('removeDuplicatesReversed').checked = true;
+            }
+            if (localStorage.getItem("shuffleNames") === "true") {
+                document.getElementById('shuffleNames').checked = true;
+            }
+            if (localStorage.getItem("addNumberingOutput") === "true") {
+                document.getElementById('addNumberingOutput').checked = true;
+            }
+            document.getElementById('inputArea').value = localStorage.getItem("inputText") || "";
+        };
+
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"], textarea').forEach(input => {
+            input.addEventListener('change', function() {
+                localStorage.setItem(this.id, this.type === 'checkbox' ? this.checked : this.checked ? 'true' : 'false');
+            });
+            input.addEventListener('input', function() {
+                localStorage.setItem("inputText", document.getElementById('inputArea').value);
+            });
+        });
+
         document.getElementById('inputArea').addEventListener('input', function() {
             const inputText = this.value.trim();
             const inputCount = inputText ? inputText.split('\n').filter(line => line.trim()).length : 0;
@@ -183,7 +226,7 @@
             }
             return array;
         }
-            
+        
         function removeNumbering(names) {
             return names.map(name => {
                 return name.replace(/^\d+\s*\./, '').trim();
@@ -221,7 +264,10 @@
             if (document.getElementById('shuffleNames').checked) {
                 names = shuffleArray(names); 
             }
-        
+            if (document.getElementById('addNumberingOutput').checked) {
+                names = names.map((name, index) => `${index + 1}. ${name}`);
+            }
+
             document.getElementById('outputArea').value = names.join('\n');
             document.getElementById('outputCount').textContent = names.length;
         }

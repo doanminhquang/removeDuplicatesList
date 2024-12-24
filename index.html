@@ -117,7 +117,7 @@
         <div class="actions">
             <button onclick="copyResult()">Sao chép kết quả</button>
             <button onclick="downloadResult()">Tải xuống TXT</button>
-            <button onclick="clearLocalStorage()">Xóa toàn bộ dữ liệu tạm thời</button>
+            <button onclick="clearAllData()">Xóa toàn bộ dữ liệu tạm thời</button>
         </div>
         <h3>Kết quả:</h3>
         
@@ -289,10 +289,20 @@
             link.click();
         }
 
-        function clearLocalStorage() {
-            localStorage.clear();
-            alert("Đã xóa toàn bộ dữ liệu lưu tạm thời");
-        }
+        function clearAllData() {
+
+    document.getElementById('inputArea').value = '';
+    document.getElementById('outputArea').value = '';
+    document.getElementById('inputCount').textContent = '0';
+    document.getElementById('outputCount').textContent = '0';
+
+    
+    localStorage.clear();
+    
+
+    
+}
+
     </script>
 </body>
 </html>

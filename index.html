@@ -146,6 +146,7 @@
                         <option value=">">></option>
                         <option value="<"><</option>
                         <option value="==">==</option>
+                        <option value="===">===</option>
                         <option value=">=">>=</option>
                         <option value="<=" selected><=</option>
                     </select>
@@ -302,6 +303,8 @@
                         return wordCount < count;
                     case '==':
                         return wordCount == count;
+                    case '===':
+                        return wordCount === count;
                     case '>=':
                         return wordCount >= count;
                     case '<=':

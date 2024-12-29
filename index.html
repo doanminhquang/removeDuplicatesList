@@ -120,6 +120,27 @@
                 <label>
                     <input type="checkbox" id="addNumberingOutput">Thêm số thứ tự vào kết quả</label>
             </div>
+            <div class="option-group">
+                <label>
+                    <input type="checkbox" id="normalizeSpaces"> Chuẩn hoá dấu cách giữa các chữ</label>
+            </div>
+            <div class="option-group">
+                <label>
+                    <input type="checkbox" id="enableComparisonFilter"> Bật lọc theo số từ</label>
+            </div>
+            <div id="comparisonFilterOptions" style="display: none;">
+                <div class="option-group">
+                    <label for="comparisonOperator">Chọn điều kiện so sánh:</label>
+                    <select id="comparisonOperator">
+                        <option value=">">></option>
+                        <option value="<"><</option>
+                        <option value=">=">>=</option>
+                        <option value="<=" selected><=</option>
+                    </select>
+                    <label for="wordCount">Số từ:</label>
+                    <input type="number" id="wordCount" min="1" value="2">
+                </div>
+            </div>
         </div>
 
         <button onclick="processData()">Thực hiện</button>
@@ -165,6 +186,13 @@
             if (localStorage.getItem("addNumberingOutput") === "true") {
                 document.getElementById('addNumberingOutput').checked = true;
             }
+            if (localStorage.getItem("normalizeSpaces") === "true") {
+                document.getElementById('normalizeSpaces').checked = true;
+            }
+            if (localStorage.getItem("enableComparisonFilter") === "true") {
+                document.getElementById('enableComparisonFilter').checked = true;
+                document.getElementById('comparisonFilterOptions').style.display = 'block';
+            }
             document.getElementById('inputArea').value = localStorage.getItem("inputText") || "";
             const inputText = document.getElementById('inputArea').value.trim();
             const inputCount = inputText ? inputText.split('\n').filter(line => line.trim()).length : 0;
@@ -174,6 +202,9 @@
         document.querySelectorAll('input[type="radio"], input[type="checkbox"], textarea').forEach(input => {
             input.addEventListener('change', function() {
                 localStorage.setItem(this.id, this.type === 'checkbox' ? this.checked : this.checked ? 'true' : 'false');
+                if (this.id === 'enableComparisonFilter') {
+                    document.getElementById('comparisonFilterOptions').style.display = this.checked ? 'block' : 'none';
+                }
             });
             input.addEventListener('input', function() {
                 localStorage.setItem("inputText", document.getElementById('inputArea').value);
@@ -246,6 +277,28 @@
             });
         }
 
+        function normalizeSpaces(names) {
+            return names.map(name => name.replace(/\s+/g, ' ').trim());
+        }
+
+        function filterByWordCount(names, operator, count) {
+            return names.filter(name => {
+                const wordCount = name.split(' ').length;
+                switch (operator) {
+                    case '>':
+                        return wordCount > count;
+                    case '<':
+                        return wordCount < count;
+                    case '>=':
+                        return wordCount >= count;
+                    case '<=':
+                        return wordCount <= count;
+                    default:
+                        return true;
+                }
+            });
+        }
+
         function processData() {
             const input = document.getElementById('inputArea').value.trim();
         
@@ -276,6 +329,14 @@
             }
             if (document.getElementById('shuffleNames').checked) {
                 names = shuffleArray(names); 
+            }
+            if (document.getElementById('normalizeSpaces').checked) {
+                names = normalizeSpaces(names);
+            }
+            if (document.getElementById('enableComparisonFilter').checked) {
+                const operator = document.getElementById('comparisonOperator').value;
+                const count = parseInt(document.getElementById('wordCount').value, 10);
+                names = filterByWordCount(names, operator, count);
             }
             if (document.getElementById('addNumberingOutput').checked) {
                 names = names.map((name, index) => `${index + 1}. ${name}`);

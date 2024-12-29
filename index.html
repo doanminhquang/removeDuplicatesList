@@ -205,6 +205,17 @@
                 document.getElementById('enableComparisonFilter').checked = true;
                 document.getElementById('comparisonFilterOptions').style.display = 'block';
             }
+
+            const comparisonOperator = localStorage.getItem("comparisonOperator");
+            if (comparisonOperator) {
+                document.getElementById('comparisonOperator').value = comparisonOperator;
+            }
+
+            const wordCount = localStorage.getItem("wordCount");
+            if (wordCount) {
+                document.getElementById('wordCount').value = wordCount;
+            }
+
             document.getElementById('inputArea').value = localStorage.getItem("inputText") || "";
             const inputText = document.getElementById('inputArea').value.trim();
             const inputCount = inputText ? inputText.split('\n').filter(line => line.trim()).length : 0;
@@ -221,6 +232,14 @@
             input.addEventListener('input', function() {
                 localStorage.setItem("inputText", document.getElementById('inputArea').value);
             });
+        });
+
+        document.getElementById('comparisonOperator').addEventListener('change', function() {
+            localStorage.setItem("comparisonOperator", this.value);
+        });
+
+        document.getElementById('wordCount').addEventListener('input', function() {
+            localStorage.setItem("wordCount", this.value);
         });
 
         document.getElementById('inputArea').addEventListener('input', function() {

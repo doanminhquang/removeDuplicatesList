@@ -75,6 +75,18 @@
             margin: 10px 0;
             font-size: 14px;
         }
+
+        #comparisonFilterOptions .option-group {
+            display: flex;
+            align-items: center;
+        }
+        #comparisonFilterOptions label {
+            margin-right: 5px;
+        }
+        #comparisonFilterOptions select,
+        #comparisonFilterOptions input {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -130,7 +142,7 @@
             </div>
             <div id="comparisonFilterOptions" style="display: none;">
                 <div class="option-group">
-                    <label for="comparisonOperator">Chọn điều kiện so sánh:</label>
+                    <label for="comparisonOperator">Điều kiện:</label>
                     <select id="comparisonOperator">
                         <option value=">">></option>
                         <option value="<"><</option>
